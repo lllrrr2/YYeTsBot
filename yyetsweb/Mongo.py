@@ -361,25 +361,37 @@ class CommentNewestMongoResource(CommentNewestResource, CommentMongoResource, Mo
         self.page = 1
         self.size = 5
         self.projection = {"ip": False, "parent_id": False, "children": False}
-        self.condition = {"deleted_at": {"$exists": False}}
+        self.condition: "dict" = {"deleted_at": {"$exists": False}}
 
-    def get_comment(self, page: int, size: int) -> dict:
+    def get_comment(self, page: int, size: int, keyword="") -> dict:
         # ID，时间，用户名，用户组，资源名，资源id
-        condition = {"deleted_at": {"$exists": False}}
-        count = self.db["comment"].count_documents(condition)
-        data = self.db["comment"].find(condition, self.projection) \
+        count = self.db["comment"].count_documents(self.condition)
+        data = self.db["comment"].find(self.condition, self.projection) \
             .sort("_id", pymongo.DESCENDING).limit(size).skip((page - 1) * size)
         data = list(data)
         self.convert_objectid(data)
         self.get_user_group(data)
-        for i in data:
-            resource_id = i.get("resource_id", 233)
-            res = self.db["yyets"].find_one({"data.info.id": resource_id})
-            i["cnname"] = res["data"]["info"]["cnname"]
+        self.extra_info(data)
         return {
             "data": data,
             "count": count,
         }
+
+    def extra_info(self, data):
+        for i in data:
+            resource_id = i.get("resource_id", 233)
+            res = self.db["yyets"].find_one({"data.info.id": resource_id})
+            i["cnname"] = res["data"]["info"]["cnname"]
+
+
+class CommentSearchMongoResource(CommentNewestMongoResource):
+
+    def get_comment(self, page: int, size: int, keyword="") -> dict:
+        self.condition.update(content={'$regex': f'.*{keyword}.*', "$options": "-i"})
+        return super(CommentSearchMongoResource, self).get_comment(page, size, keyword)
+
+    def extra_info(self, data):
+        pass
 
 
 class GrafanaQueryMongoResource(GrafanaQueryResource, Mongo):

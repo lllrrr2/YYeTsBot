@@ -490,6 +490,27 @@ class CommentNewestHandler(CommentHandler):
         self.write(resp)
 
 
+class CommentSearchHandler(CommentHandler):
+    class_name = f"CommentSearch{adapter}Resource"
+
+    # from Mongo import CommentNewestResource
+    # instance = CommentNewestResource()
+
+    @run_on_executor()
+    def search_comment(self):
+        size = int(self.get_argument("size", "5"))
+        page = int(self.get_argument("page", "1"))
+        keyword = self.get_argument("keyword", "")
+        comment_data = self.instance.get_comment(page, size, keyword)
+        self.hide_phone((comment_data["data"]))
+        return comment_data
+
+    @gen.coroutine
+    def get(self):
+        resp = yield self.search_comment()
+        self.write(resp)
+
+
 class AnnouncementHandler(BaseHandler):
     class_name = f"Announcement{adapter}Resource"
 

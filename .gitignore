@@ -127,14 +127,24 @@ logs/*
 /yyetsweb/yyets_sqlite.db
 /yyetsweb/yyetsweb
 /yyetsweb/assets.go
-/yyetsweb/templates/static/*
 /yyetsweb/templates/sponsor/*
 /yyetsweb/templates/svg/*
 /yyetsweb/templates/index.css
 /yyetsweb/templates/logo*
 /yyetsweb/templates/*.json
 
-
+/yyetsweb/templates/*
 /yyetsweb/templates/data/*
 /yyetsweb/builds/
 /builds/checksum-sha256sum.txt
+/yyetsweb/1.html
+!/env/
+!/mongo_data/
+/env/yyets.env
+!/docker-compose.override.yml
+/docker-compose.override.yml
+/yyetsweb/templates/dump/yyets_mongo.gz
+/yyetsweb/templates/dump/yyets_mysql.zip
+/yyetsweb/templates/dump/yyets_sqlite.zip
+/yyetsweb/subtitle_data/attachment/201001/17/758231_1263706947i2nW.rar
+/yyetsweb/subtitle_data/attachment/200912/4/212807_1259889699DJm8.rar

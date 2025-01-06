@@ -10,7 +10,7 @@
 
 # 导入数据
 
-从 [这里](https://yyets.dmesg.app/database) 下载mongodb数据，然后导入
+从 [这里](https://yyets.click/database) 下载mongodb数据，然后导入
 
 ```shell
 mongorestore --gzip --archive=yyets_mongo.gz --nsFrom "share.*" --nsTo "zimuzu.*"
@@ -38,6 +38,10 @@ db.getCollection('douban').createIndex({"resourceId" : 1});
 db.getCollection('douban').getIndexes();
 
 db.getCollection('users').createIndex({"username" : 1}, { unique: true });
+db.getCollection('users').createIndex(
+   { "email.address": 1 },
+   { unique: true, partialFilterExpression: { "email.address": { $exists: true } } }
+)
 db.getCollection('users').getIndexes();
 
 db.getCollection('comment').createIndex({"resource_id" : 1});

@@ -12,53 +12,55 @@ services:
     restart: always
     volumes:
       - ./mongo_data/mongodb:/data/db
+    command: --quiet
     logging:
       driver: none
+    ports:
+      - "127.0.0.1:27017:27017"
 
-  yyets-web:
-    image: bennythink/yyetsbot
+  meili:
+    image: getmeili/meilisearch:v1.0.2
+    restart: always
+    environment:
+      - MEILI_HTTP_PAYLOAD_SIZE_LIMIT=1073741824 #1GiB
+    volumes:
+      - meilisearch_data:/meili_data
+
+  mysql:
+    image: ubuntu/mysql:8.0-22.04_beta
     restart: unless-stopped
     environment:
-      - mongo=mongo
-      - redis=redis
-    working_dir: /YYeTsBot/yyetsweb/
-    command: [ "python3","server.py","-h=0.0.0.0" ]
-    ports:
-      - "127.0.0.1:8888:8888"
+      MYSQL_ROOT_PASSWORD: 'root'
+    logging:
+      driver: none
+    command: "--skip-log-bin --default-authentication-plugin=mysql_native_password"
 
-  socat:
-    image: alpine/socat
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    entrypoint: [ "socat", "tcp-listen:2375,fork,reuseaddr","unix-connect:/var/run/docker.sock" ]
-
-  yyets-bot:
+  bot:
     image: bennythink/yyetsbot
     depends_on:
       - redis
-      - socat
       - mongo
-    restart: on-failure
+    restart: always
     env_file:
       - env/yyets.env
 
-  mailhog:
-    image: cd2team/mailhog
-    restart: unless-stopped
-    ports:
-      - "8025:8025"
-
-  nginx:
+  web:
+    image: bennythink/yyetsbot
     restart: always
-    image: nginx:stable-alpine
+    env_file:
+      - env/yyets.env
+    depends_on:
+      - mongo
+      - redis
+      - mysql
+    working_dir: /YYeTsBot/yyetsweb/
     volumes:
-      - ./conf:/etc/nginx/conf.d
-      - /home/photos:/usr/share/nginx/html/photos
-      - ./certs/:/etc/nginx/certs/
-      - ./logs:/var/log/nginx/
+      - ./subtitle_data:/YYeTsBot/yyetsweb/subtitle_data
+    command: [ "python3","server.py","-h=0.0.0.0" ]
     ports:
-      - "80:80"
-      - "443:443"
-    environment:
-      TZ: Asia/Shanghai
+      - "127.0.0.1:8888:8888"
+      - "172.17.0.1:8888:8888"
+
+
+volumes:
+  meilisearch_data:

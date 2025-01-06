@@ -1,13 +1,7 @@
 # YYeTsBot
 
-[![build docker image](https://github.com/tgbot-collection/YYeTsBot/actions/workflows/builder.yaml/badge.svg)](https://github.com/tgbot-collection/YYeTsBot/actions/workflows/builder.yaml)
+[![build docker image](https://github.com/tgbot-collection/YYeTsBot/actions/workflows/docker.yaml/badge.svg)](https://github.com/tgbot-collection/YYeTsBot/actions/workflows/docker.yaml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/bennythink/yyetsbot)](https://hub.docker.com/r/bennythink/yyetsbot)
-
-* 人人影视bot，[戳我使用](https://t.me/yyets_bot)
-
-* 人人影视分享站，[戳我使用](https://yyets.dmesg.app/)
-
-机器人和网站由我长期维护，如果遇到问题可以提issue。
 
 ![](assets/index.png)
 
@@ -17,11 +11,8 @@
 
 直接发送想要看的剧集名称就可以了，可选分享网页或者链接（ed2k和磁力链接）。
 
-支持字幕侠、人人影视离线资源
 
 搜索资源时，会按照我预定的优先级（人人影视离线、字幕侠）进行搜索，当然也可以使用命令强制某个字幕组，如 `/yyets_offline 逃避可耻`
-
-**由于译名的不同，建议输入部分译名，然后从列表中进行选择。比如说想看权力的游戏第四季，那么直接搜索"权力的游戏"就可以了。**
 
 ## 命令
 
@@ -78,19 +69,28 @@ yyets_offline - 人人影视离线数据
 # 小白使用
 
 想要自己留一份资源，但是又不懂编程？ 没关系！目前提供两种方式，请根据自己情况选择
+“离线使用” 意味着可以断网使用，但是不会自动更新资源，需要手动更新数据库；“在线应用” 意味着需要有互联网才可以使用。
 
-## 一键安装包
+## 离线  完整运行包
 
-这个版本是新的UI，拥有全部的最新功能。
+这个版本是新的UI，拥有全部的最新功能。运行在你本地的电脑上，不依赖外界环境。
 [参考文档](https://github.com/tgbot-collection/YYeTsBot/blob/master/DEVELOPMENT.md#%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC)
 
-## 一键运行包
+## 离线  一键运行包
 
-这个版本使用起来也很简单，也同样是最新的UI，只不过只有最基础的搜索功能。步骤如下
+一键运行包。拥有比较新的UI，只不过只有最基础的搜索、查看资源的功能。使用方法步骤如下
 
-1. 请到 [GitHub Release](https://github.com/tgbot-collection/YYeTsBot/releases) 根据自己平台下载最新的一键运行包
+1. 请到 [GitHub Release](https://github.com/tgbot-collection/YYeTsBot/releases) ，找最新的 `YYeTsBot 离线一键运行包`
 2. windows：双击第一步下载的exe文件； macos/Linux，cd到你的目录, `chmod +x yyetsweb ; ./yyetsweb`
-3. 程序会自动下载数据库并启动。等到出现启动banner时， 打开浏览器 http://127.0.0.1:8888 就可以看到熟悉的搜索界面啦！
+3. 程序会自动下载数据库并启动。等到出现启动提示时， 打开浏览器 http://127.0.0.1:8888 就可以看到熟悉的搜索界面啦！
+
+## 在线 原生应用程序
+
+使用tauri封装的网页。使用方法如下
+
+1. 请到 [GitHub Release](https://github.com/tgbot-collection/YYeTsBot/releases) ，找最新的 `YYeTsBot App`
+2. windows下载msi，macos下载dmg或tar.gz，Linux下载AppImage或deb（Debian based）
+3. 安装后，打开App，就可以看到熟悉的搜索界面啦！
 
 # 开发
 
@@ -107,9 +107,9 @@ yyets_offline - 人人影视离线数据
 ```
 >>> from yyets import YYeTs
 >>> yy=YYeTs("逃避")
-[2021-09-21 19:22:32 __init__.py:54 I] Fetching 逃避可耻却有用...https://yyets.dmesg.app/api/resource?id=34812
-[2021-09-21 19:22:33 __init__.py:54 I] Fetching 无法逃避...https://yyets.dmesg.app/api/resource?id=29540
-[2021-09-21 19:22:35 __init__.py:54 I] Fetching 逃避者...https://yyets.dmesg.app/api/resource?id=37089
+[2021-09-21 19:22:32 __init__.py:54 I] Fetching 逃避可耻却有用...https://yyets.click/api/resource?id=34812
+[2021-09-21 19:22:33 __init__.py:54 I] Fetching 无法逃避...https://yyets.click/api/resource?id=29540
+[2021-09-21 19:22:35 __init__.py:54 I] Fetching 逃避者...https://yyets.click/api/resource?id=37089
 
 >>> yy.result
 [<yyets.Resource object at 0x10cc7b130>, <yyets.Resource object at 0x10ca0e880>, <yyets.Resource object at 0x10cc7b040>]
@@ -144,12 +144,16 @@ yyets_offline - 人人影视离线数据
 * 宣传，使用，提交问题报告
 * 收藏[我的博客](https://dmesg.app/)
 * [Telegram Channel](https://t.me/mikuri520)
-* 捐助我，[给我买杯咖啡？](https://www.buymeacoffee.com/bennythink)
-* 捐助我，[爱发电？](https://afdian.net/@BennyThink)
 
-# 感谢
+## 捐助
 
-感谢所有[支持本项目](SPONSOR.md)的人！
+* [给我买杯咖啡？](https://www.buymeacoffee.com/bennythink)
+* [爱发电？](https://afdian.net/@BennyThink)
+* [GitHub Sponsor](https://github.com/sponsors/BennyThink)
+* [Stripe](https://buy.stripe.com/dR67vU4p13Ox73a6oq)
+
+ <img src="./assets/CNY.png" width = 30%  alt="stripe"  />
+
 
 # License
 
